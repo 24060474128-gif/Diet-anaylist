@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Nutrisi & Kebugaran - Bu Lia</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .tab-active {
+      background-color: #16a34a;
+      color: #ffffff !important;
+      box-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.3);
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col md:flex-row">
+
+  <!-- SIDEBAR NAVIGATION -->
+  <aside class="w-full md:w-64 bg-slate-900 text-slate-300 flex-shrink-0 flex flex-col justify-between border-r border-slate-800">
+    <div>
+      <!-- Brand Logo & Title -->
+      <div class="p-5 border-b border-slate-800 flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-white font-bold shadow-lg">
+          <i data-lucide="activity" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-white text-base leading-tight">NutriFit Pro</h1>
+          <p class="text-xs text-slate-400">Sports Nutrition System</p>
+        </div>
+      </div>
+
+      <!-- Client Quick Profile -->
+      <div class="p-4 mx-3 my-4 bg-slate-800/80 rounded-xl border border-slate-700/60">
+        <div class="flex items-center space-x-3">
+          <div class="w-11 h-11 rounded-full bg-slate-700 flex items-center justify-center text-brand-400 font-bold border-2 border-brand-500/30">
+            BL
+          </div>
+          <div>
+            <h2 class="font-semibold text-white text-sm">Bu Lia</h2>
+            <p class="text-xs text-slate-400">54 Tahun • 155 cm • 58 kg</p>
+            <span class="inline-block mt-1 px-2 py-0.5 text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full">
+              Healthy Aging & Active
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="px-3 space-y-1">
+        <button onclick="switchTab('overview')" id="nav-overview" class="tab-button tab-active w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all text-slate-300 hover:bg-slate-800 hover:text-white">
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+          <span>Dashboard Utama</span>
+        </button>
+        <button onclick="switchTab('monitoring')" id="nav-monitoring" class="tab-button w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all text-slate-300 hover:bg-slate-800 hover:text-white">
+          <i data-lucide="calendar" class="w-4 h-4"></i>
+          <span>Monitoring Harian</span>
+        </button>
+        <button onclick="switchTab('antropometri')" id="nav-antropometri" class="tab-button w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all text-slate-300 hover:bg-slate-800 hover:text-white">
+          <i data-lucide="scale" class="w-4 h-4"></i>
+          <span>Profil & Antropometri</span>
+        </button>
+        <button onclick="switchTab('program')" id="nav-program" class="tab-button w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all text-slate-300 hover:bg-slate-800 hover:text-white">
+          <i data-lucide="dumbbell" class="w-4 h-4"></i>
+          <span>Program Latihan</span>
+        </button>
+        <button onclick="switchTab('rekomendasi')" id="nav-rekomendasi" class="tab-button w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all text-slate-300 hover:bg-slate-800 hover:text-white">
+          <i data-lucide="utensils" class="w-4 h-4"></i>
+          <span>Rekomendasi Diet</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Sports Nutritionist Footer Info -->
+    <div class="p-4 border-t border-slate-800 text-xs text-slate-500">
+      <div class="flex items-center space-x-2 text-slate-400 font-medium mb-1">
+        <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+        <span>Evidence-Based Practice</span>
+      </div>
+      <p>Mifflin-St Jeor Formula • ESPEN / PROT-AGE Guidelines</p>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT AREA -->
+  <main class="flex-1 overflow-y-auto flex flex-col">
+    
+    <!-- TOP HEADER BAR -->
+    <header class="bg-white border-b border-slate-200 px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sticky top-0 z-10 shadow-sm">
+      <div>
+        <h1 id="page-title" class="text-xl font-bold text-slate-900">Dashboard Utama</h1>
+        <p class="text-xs text-slate-500">Analisis Pemantauan Nutrisi & Komposisi Tubuh Real-time</p>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <button onclick="openAddModal()" class="flex items-center space-x-2 bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-md shadow-brand-600/20 active:scale-95">
+          <i data-lucide="plus-circle" class="w-4 h-4"></i>
+          <span>Catat Log Harian</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENT BODY CONTAINER -->
+    <div class="p-6 space-y-6 flex-1">
+
+      <!-- ALERT BANNER FOR CALORIC DEFICIT STATUS -->
+      <div id="alert-banner" class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div class="flex items-start space-x-3">
+          <div class="p-2 bg-amber-100 text-amber-700 rounded-lg flex-shrink-0 mt-0.5 sm:mt-0">
+            <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-semibold text-amber-900 text-sm">Peringatan Klinis: Asupan Kalori Berada di Bawah BMR</h3>
+            <p class="text-xs text-amber-800 mt-0.5">
+              Rata-rata asupan saat ini (<span id="banner-avg-cal" class="font-bold">1,011 kkal</span>) berada di bawah BMR Bu Lia (<span class="font-bold">1,118 kkal</span>). Disarankan untuk menaikkan asupan bertahap menuju target <span class="font-bold">1,473 kkal</span> guna mencegah penurunan massa otot dan adaptasi metabolik.
+            </p>
+          </div>
+        </div>
+        <button onclick="switchTab('rekomendasi')" class="text-xs font-semibold bg-amber-200 hover:bg-amber-300 text-amber-900 px-3 py-1.5 rounded-lg transition flex-shrink-0 self-end sm:self-center">
+          Lihat Solusi Menu
+        </button>
+      </div>
+
+      <!-- TAB 1: OVERVIEW DASHBOARD -->
+      <section id="tab-overview" class="tab-content space-y-6">
+        
+        <!-- TOP KPI CARDS GRID -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          
+          <!-- Card 1: Target vs Actual Calories -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Rata-rata Kalori</span>
+              <div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center">
+                <i data-lucide="flame" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div class="mt-3">
+              <div class="text-2xl font-bold text-slate-900" id="kpi-avg-cal">1,011 <span class="text-xs text-slate-500 font-normal">kkal</span></div>
+              <div class="text-xs text-slate-500 mt-1 flex items-center justify-between">
+                <span>Target: 1,473 kkal</span>
+                <span class="font-medium text-amber-600" id="kpi-cal-pct">68.6%</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full mt-2 overflow-hidden">
+                <div id="bar-cal-pct" class="bg-amber-500 h-full rounded-full" style="width: 68.6%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Protein Intake -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Rata-rata Protein</span>
+              <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <i data-lucide="beef" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div class="mt-3">
+              <div class="text-2xl font-bold text-slate-900" id="kpi-avg-protein">59.5 <span class="text-xs text-slate-500 font-normal">gram</span></div>
+              <div class="text-xs text-slate-500 mt-1 flex items-center justify-between">
+                <span>Target: 92.8 gram</span>
+                <span class="font-medium text-emerald-600" id="kpi-protein-pct">64.1%</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full mt-2 overflow-hidden">
+                <div id="bar-protein-pct" class="bg-emerald-500 h-full rounded-full" style="width: 64.1%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Hydration Average -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Asupan Cairan</span>
+              <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+                <i data-lucide="droplets" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div class="mt-3">
+              <div class="text-2xl font-bold text-slate-900" id="kpi-avg-water">2.6 <span class="text-xs text-slate-500 font-normal">Liter</span></div>
+              <div class="text-xs text-slate-500 mt-1 flex items-center justify-between">
+                <span>Target Min: 2.5 L</span>
+                <span class="font-medium text-emerald-600">Optimal</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full mt-2 overflow-hidden">
+                <div class="bg-blue-500 h-full rounded-full" style="width: 100%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Average Sleep & Recovery -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Durasi Tidur</span>
+              <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                <i data-lucide="moon" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div class="mt-3">
+              <div class="text-2xl font-bold text-slate-900" id="kpi-avg-sleep">6.4 <span class="text-xs text-slate-500 font-normal">Jam</span></div>
+              <div class="text-xs text-slate-500 mt-1 flex items-center justify-between">
+                <span>Target: 7.0 - 8.0 jam</span>
+                <span class="font-medium text-indigo-600" id="kpi-sleep-status">Cukup</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full mt-2 overflow-hidden">
+                <div id="bar-sleep-pct" class="bg-indigo-500 h-full rounded-full" style="width: 80%"></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- CHARTS SECTION GRID -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Chart 1: Daily Caloric Intake vs BMR vs Target (2 Cols) -->
+          <div class="lg:col-span-2 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h3 class="font-bold text-slate-900 text-base">Tren Kalori Harian vs Ambang BMR</h3>
+                <p class="text-xs text-slate-500">Garis merah melambangkan BMR (1,118 kkal), garis hijau adalah Target Defisit (1,473 kkal)</p>
+              </div>
+              <span class="px-2.5 py-1 text-xs font-medium bg-slate-100 text-slate-700 rounded-lg">7 Hari Terakhir</span>
+            </div>
+            <div class="h-64 sm:h-72">
+              <canvas id="caloriesChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 2: Macro & Protein Compliance -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="font-bold text-slate-900 text-base">Kepatuhan Protein</h3>
+                <div class="p-1.5 bg-emerald-50 text-emerald-600 rounded-md">
+                  <i data-lucide="target" class="w-4 h-4"></i>
+                </div>
+              </div>
+              <p class="text-xs text-slate-500 mb-4">Pencapaian protein harian terhadap target 92.8 gram</p>
+              <div class="h-48 relative flex items-center justify-center">
+                <canvas id="proteinGaugeChart"></canvas>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-600 space-y-2">
+              <div class="flex justify-between">
+                <span>Rata-rata Terukur:</span>
+                <span class="font-bold text-slate-800" id="gauge-current-text">59.5 g / hari</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Rekomendasi Tambahan:</span>
+                <span class="font-bold text-emerald-600">+33.3 g / hari</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- SECONDARY CHARTS GRID -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          
+          <!-- Activity & Workout Duration Chart -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h3 class="font-bold text-slate-900 text-base">Aktivitas Fisik & Intensitas (RPE)</h3>
+                <p class="text-xs text-slate-500">Durasi latihan kardio/strength dan tingkat kelelahan</p>
+              </div>
+            </div>
+            <div class="h-60">
+              <canvas id="activityChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Hydration & Sleep Correlation Chart -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h3 class="font-bold text-slate-900 text-base">Hidrasi vs Pemulihan Tidur</h3>
+                <p class="text-xs text-slate-500">Hubungan konsumsi air putih dan jam tidur malam</p>
+              </div>
+            </div>
+            <div class="h-60">
+              <canvas id="recoveryChart"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- TAB 2: MONITORING HARIAN (TABLE VIEW) -->
+      <section id="tab-monitoring" class="tab-content hidden space-y-6">
+        
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          
+          <div class="p-5 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/50">
+            <div>
+              <h3 class="font-bold text-slate-900 text-base">Catatan Log Harian Bu Lia</h3>
+              <p class="text-xs text-slate-500">Data konsumsi, olahraga, hidrasi, dan tingkat pemulihan</p>
+            </div>
+            <button onclick="openAddModal()" class="flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span>Tambah Baris Data</span>
+            </button>
+          </div>
+
+          <!-- TABLE CONTAINER -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs sm:text-sm">
+              <thead>
+                <tr class="bg-slate-100/80 text-slate-600 font-semibold uppercase tracking-wider border-b border-slate-200 text-[11px]">
+                  <th class="py-3 px-4">Tanggal</th>
+                  <th class="py-3 px-4">BB (kg)</th>
+                  <th class="py-3 px-4">Kalori (kkal)</th>
+                  <th class="py-3 px-4">Protein (g)</th>
+                  <th class="py-3 px-4">Air (L)</th>
+                  <th class="py-3 px-4">Tidur</th>
+                  <th class="py-3 px-4">Latihan</th>
+                  <th class="py-3 px-4">Durasi</th>
+                  <th class="py-3 px-4">RPE</th>
+                  <th class="py-3 px-4">Catatan / Evaluasi</th>
+                </tr>
+              </thead>
+              <tbody id="monitoring-table-body" class="divide-y divide-slate-200 text-slate-700">
+                <!-- Dynamic rows populated via JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="p-4 border-t border-slate-200 bg-slate-50 text-xs text-slate-500 flex justify-between items-center">
+            <span id="table-row-count">Menampilkan 4 entri catatan</span>
+            <span class="text-slate-400">Diperbarui real-time</span>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- TAB 3: PROFIL & ANTROPOMETRI -->
+      <section id="tab-antropometri" class="tab-content hidden space-y-6">
+        
+        <!-- BMR & TDEE CALCULATION SUMMARY -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-6 rounded-2xl shadow-md space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="font-bold text-lg text-emerald-400">Mifflin-St Jeor Formula</h3>
+              <i data-lucide="calculator" class="w-5 h-5 text-emerald-400"></i>
+            </div>
+            <div class="space-y-2 text-xs text-slate-300">
+              <p><span class="text-slate-400">Jenis Kelamin:</span> Wanita (54 Th)</p>
+              <p><span class="text-slate-400">Berat Badan:</span> 58.0 kg</p>
+              <p><span class="text-slate-400">Tinggi Badan:</span> 155.0 cm</p>
+              <div class="border-t border-slate-700 pt-2 mt-2">
+                <div class="text-slate-400">BMR (Metabolisme Basal):</div>
+                <div class="text-2xl font-bold text-white mt-1">1,117.75 <span class="text-xs font-normal">kkal/hari</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="font-bold text-slate-900">Total Energy Expenditure</h3>
+              <i data-lucide="zap" class="w-5 h-5 text-amber-500"></i>
+            </div>
+            <div class="space-y-2 text-xs text-slate-600">
+              <p><span class="font-medium">Faktor Aktivitas:</span> 1.55 (Sedang - Kardio 2x/mgg)</p>
+              <p><span class="font-medium">BMR x Aktivitas:</span> 1,117.75 x 1.55</p>
+              <div class="border-t border-slate-100 pt-2 mt-2">
+                <div class="text-slate-500">TDEE (Pemeliharaan):</div>
+                <div class="text-2xl font-bold text-slate-900 mt-1">1,732.51 <span class="text-xs font-normal text-slate-500">kkal/hari</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="font-bold text-slate-900">Target Defisit Konservatif</h3>
+              <i data-lucide="shield" class="w-5 h-5 text-emerald-600"></i>
+            </div>
+            <div class="space-y-2 text-xs text-slate-600">
+              <p><span class="font-medium">Defisit Awal:</span> 15% dari TDEE</p>
+              <p><span class="font-medium">Target Protein:</span> 1.6 g / kg BB (92.8g)</p>
+              <div class="border-t border-slate-100 pt-2 mt-2">
+                <div class="text-slate-500">Target Asupan Harian:</div>
+                <div class="text-2xl font-bold text-emerald-600 mt-1">1,472.64 <span class="text-xs font-normal text-slate-500">kkal/hari</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- MEASUREMENT TABLE & HEALTH INDICES -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <div class="lg:col-span-2 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <h3 class="font-bold text-slate-900 text-base mb-3">Pengukuran Antropometri Baseline</h3>
+            <p class="text-xs text-slate-500 mb-4">Dievaluasi ulang setiap 2-4 minggu pada kondisi terstandardisasi (pagi hari)</p>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                <span class="text-[11px] text-slate-500 uppercase font-medium">Lingkar Pinggang</span>
+                <div class="text-lg font-bold text-slate-800 mt-1">80.0 cm</div>
+              </div>
+              <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                <span class="text-[11px] text-slate-500 uppercase font-medium">Lingkar Perut</span>
+                <div class="text-lg font-bold text-slate-800 mt-1">85.0 cm</div>
+              </div>
+              <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                <span class="text-[11px] text-slate-500 uppercase font-medium">Lingkar Pinggul</span>
+                <div class="text-lg font-bold text-slate-800 mt-1">95.0 cm</div>
+              </div>
+              <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                <span class="text-[11px] text-slate-500 uppercase font-medium">Lingkar Dada</span>
+                <div class="text-lg font-bold text-slate-800 mt-1">102.0 cm</div>
+              </div>
+              <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                <span class="text-[11px] text-slate-500 uppercase font-medium">Lingkar Lengan</span>
+                <div class="text-lg font-bold text-slate-800 mt-1">26.0 cm</div>
+              </div>
+              <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                <span class="text-[11px] text-slate-500 uppercase font-medium">Lingkar Paha</span>
+                <div class="text-lg font-bold text-slate-800 mt-1">48.0 cm</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- HEALTH INDICES CARD -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <h3 class="font-bold text-slate-900 text-base">Rasio & Indikator Kesehatan</h3>
+            
+            <div class="space-y-3 text-xs">
+              
+              <div class="p-3 bg-slate-50 rounded-xl flex items-center justify-between">
+                <div>
+                  <div class="font-semibold text-slate-800">WHtR (Waist-to-Height)</div>
+                  <div class="text-[11px] text-slate-500">Lingkar Pinggang ÷ TB</div>
+                </div>
+                <div class="text-right">
+                  <span class="text-sm font-bold text-amber-600">0.516</span>
+                  <div class="text-[10px] text-amber-600">Batas Waspada (&gt;0.50)</div>
+                </div>
+              </div>
+
+              <div class="p-3 bg-slate-50 rounded-xl flex items-center justify-between">
+                <div>
+                  <div class="font-semibold text-slate-800">WHR (Waist-to-Hip)</div>
+                  <div class="text-[11px] text-slate-500">Lingkar Pinggang ÷ Pinggul</div>
+                </div>
+                <div class="text-right">
+                  <span class="text-sm font-bold text-emerald-600">0.842</span>
+                  <div class="text-[10px] text-emerald-600">Risiko Sedang (&lt;0.85)</div>
+                </div>
+              </div>
+
+              <div class="p-3 bg-slate-50 rounded-xl flex items-center justify-between">
+                <div>
+                  <div class="font-semibold text-slate-800">BMI (Indeks Massa Tubuh)</div>
+                  <div class="text-[11px] text-slate-500">58 kg ÷ (1.55m)²</div>
+                </div>
+                <div class="text-right">
+                  <span class="text-sm font-bold text-slate-800">24.14 kg/m²</span>
+                  <div class="text-[10px] text-slate-500">Kategori Normal Asia</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- TAB 4: PROGRAM LATIHAN MINGGUAN -->
+      <section id="tab-program" class="tab-content hidden space-y-6">
+        
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-bold text-slate-900 text-base">Jadwal & Struktur Latihan Fisik Mingguan</h3>
+              <p class="text-xs text-slate-500">Kombinasi Strength Training (Full Body) dan Kardio Zona Sedang untuk Pemeliharaan Massa Otot</p>
+            </div>
+            <span class="px-3 py-1 text-xs font-semibold bg-emerald-100 text-emerald-800 rounded-full">Progresif & Safe Aging</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-3">
+            
+            <!-- Senin -->
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex flex-col justify-between">
+              <div>
+                <span class="text-xs font-bold text-emerald-700 uppercase">Senin</span>
+                <h4 class="font-semibold text-slate-800 text-xs mt-1">Strength A (Full Body)</h4>
+                <p class="text-[11px] text-slate-500 mt-1">Goblet Squat, RDL, Push-Up/Bench, Row, Plank</p>
+              </div>
+              <div class="mt-3 text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-medium text-center">RPE 6 - 8</div>
+            </div>
+
+            <!-- Selasa -->
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex flex-col justify-between">
+              <div>
+                <span class="text-xs font-bold text-blue-700 uppercase">Selasa</span>
+                <h4 class="font-semibold text-slate-800 text-xs mt-1">Kardio Zona Sedang</h4>
+                <p class="text-[11px] text-slate-500 mt-1">Jalan cepat, sepeda statis, atau renang (20-35 mnt)</p>
+              </div>
+              <div class="mt-3 text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-medium text-center">Talk Test Fit</div>
+            </div>
+
+            <!-- Rabu -->
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex flex-col justify-between">
+              <div>
+                <span class="text-xs font-bold text-slate-600 uppercase">Rabu</span>
+                <h4 class="font-semibold text-slate-800 text-xs mt-1">Pemulihan Aktif</h4>
+                <p class="text-[11px] text-slate-500 mt-1">Jalan santai, stretching mobilitas pinggul & torakal</p>
+              </div>
+              <div class="mt-3 text-[10px] bg-slate-200 text-slate-700 px-2 py-0.5 rounded font-medium text-center">Intensitas Ringan</div>
+            </div>
+
+            <!-- Kamis -->
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex flex-col justify-between">
+              <div>
+                <span class="text-xs font-bold text-emerald-700 uppercase">Kamis</span>
+                <h4 class="font-semibold text-slate-800 text-xs mt-1">Strength B (Full Body)</h4>
+                <p class="text-[11px] text-slate-500 mt-1">Split Squat, Hip Thrust, Overhead Press, Lat Pulldown</p>
+              </div>
+              <div class="mt-3 text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-medium text-center">RPE 6 - 8</div>
+            </div>
+
+            <!-- Jumat -->
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex flex-col justify-between">
+              <div>
+                <span class="text-xs font-bold text-blue-700 uppercase">Jumat</span>
+                <h4 class="font-semibold text-slate-800 text-xs mt-1">Kardio Zona Sedang</h4>
+                <p class="text-[11px] text-slate-500 mt-1">Aerobik / renang / joging ringan (20-35 mnt)</p>
+              </div>
+              <div class="mt-3 text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-medium text-center">Sedang</div>
+            </div>
+
+            <!-- Sabtu -->
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex flex-col justify-between">
+              <div>
+                <span class="text-xs font-bold text-purple-700 uppercase">Sabtu</span>
+                <h4 class="font-semibold text-slate-800 text-xs mt-1">Opsional Rekreasi</h4>
+                <p class="text-[11px] text-slate-500 mt-1">Jalan santai outdoor, bersepeda keluarga</p>
+              </div>
+              <div class="mt-3 text-[10px] bg-purple-100 text-purple-800 px-2 py-0.5 rounded font-medium text-center">Santai</div>
+            </div>
+
+            <!-- Minggu -->
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex flex-col justify-between">
+              <div>
+                <span class="text-xs font-bold text-rose-700 uppercase">Minggu</span>
+                <h4 class="font-semibold text-slate-800 text-xs mt-1">Istirahat Total</h4>
+                <p class="text-[11px] text-slate-500 mt-1">Pemulihan penuh, persiapan meal prep mingguan</p>
+              </div>
+              <div class="mt-3 text-[10px] bg-rose-100 text-rose-800 px-2 py-0.5 rounded font-medium text-center">Rest Day</div>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+      <!-- TAB 5: REKOMENDASI DIET & STRATEGI NUTRISI -->
+      <section id="tab-rekomendasi" class="tab-content hidden space-y-6">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          
+          <!-- RECOMMENDATION PANEL -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <div class="flex items-center space-x-3 text-emerald-700">
+              <i data-lucide="check-circle" class="w-6 h-6"></i>
+              <h3 class="font-bold text-slate-900 text-base">Panduan Menaikkan Kalori & Protein Aman</h3>
+            </div>
+            
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Bu Lia saat ini mengonsumsi ~1,011 kkal/hari. Untuk mencapai target **1,473 kkal** tanpa rasa kekenyangan yang berlebihan, kita gunakan strategi **Lauk Protein Padat Nutrisi & Lemak Sehat**:
+            </p>
+
+            <div class="space-y-3 text-xs">
+              <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+                <h4 class="font-bold text-emerald-900">1. Tambahkan 1 Telur Rebus / Ceplok Air saat Sarapan</h4>
+                <p class="text-emerald-800 mt-0.5">+70 kkal | +6g Protein | Kaya kolin untuk imunitas</p>
+              </div>
+
+              <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+                <h4 class="font-bold text-emerald-900">2. Sisipkan Camilan Protein Sore</h4>
+                <p class="text-emerald-800 mt-0.5">1 gelas susu low-fat (200ml) atau 1 mangkuk edamame rebus (100g) → +140 kkal | +10g Protein</p>
+              </div>
+
+              <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+                <h4 class="font-bold text-emerald-900">3. Tingkatkan Porsi Ikan / Ayam Matang</h4>
+                <p class="text-emerald-800 mt-0.5">Perbesar porsi ikan kembung, pepes ayam, atau tahu tempe dari 70g menjadi 100-120g matang pada makan siang dan malam.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- MEAL TIMING EXAMPLE CARD -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <h3 class="font-bold text-slate-900 text-base">Contoh Pembagian Makanan Harian (~1,470 kkal)</h3>
+            
+            <div class="space-y-2.5 text-xs">
+              
+              <div class="flex justify-between items-center p-2.5 bg-slate-50 rounded-lg">
+                <div>
+                  <span class="font-bold text-slate-800">Sarapan (07:00)</span>
+                  <div class="text-[11px] text-slate-500">1 centong nasi merah + 2 telur dadar + 2 tempe bacem + bayam</div>
+                </div>
+                <span class="font-bold text-emerald-600 flex-shrink-0 ml-2">~360 kkal</span>
+              </div>
+
+              <div class="flex justify-between items-center p-2.5 bg-slate-50 rounded-lg">
+                <div>
+                  <span class="font-bold text-slate-800">Makan Siang (12:30)</span>
+                  <div class="text-[11px] text-slate-500">Nasi 120g + 1 ekor ikan kembung panggang + capcay sayur + pepaya</div>
+                </div>
+                <span class="font-bold text-emerald-600 flex-shrink-0 ml-2">~460 kkal</span>
+              </div>
+
+              <div class="flex justify-between items-center p-2.5 bg-slate-50 rounded-lg">
+                <div>
+                  <span class="font-bold text-slate-800">Camilan Sore (16:00)</span>
+                  <div class="text-[11px] text-slate-500">1 gelas susu rendah lemak + 1 pisang ukuran sedang</div>
+                </div>
+                <span class="font-bold text-emerald-600 flex-shrink-0 ml-2">~200 kkal</span>
+              </div>
+
+              <div class="flex justify-between items-center p-2.5 bg-slate-50 rounded-lg">
+                <div>
+                  <span class="font-bold text-slate-800">Makan Malam (19:00)</span>
+                  <div class="text-[11px] text-slate-500">Kentang rebus 150g + pepes dada ayam 100g + sup wortel buncis</div>
+                </div>
+                <span class="font-bold text-emerald-600 flex-shrink-0 ml-2">~450 kkal</span>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- MODAL FORM: ADD LOG HARIAN BARU -->
+  <div id="addModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto space-y-4">
+      
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <h3 class="text-base font-bold text-slate-900 flex items-center space-x-2">
+          <i data-lucide="plus-circle" class="w-5 h-5 text-emerald-600"></i>
+          <span>Catat Log Nutrisi & Aktivitas Harian</span>
+        </h3>
+        <button onclick="closeAddModal()" class="text-slate-400 hover:text-slate-600 p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="logForm" onsubmit="handleFormSubmit(event)" class="space-y-3 text-xs">
+        
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Tanggal</label>
+            <input type="date" id="input-tanggal" required class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Berat Badan (kg)</label>
+            <input type="number" step="0.1" placeholder="58.0" id="input-bb" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Kalori Masuk (kkal)</label>
+            <input type="number" id="input-kalori" required placeholder="misal: 1250" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Protein (gram)</label>
+            <input type="number" id="input-protein" required placeholder="misal: 75" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Asupan Air (Liter)</label>
+            <input type="number" step="0.1" id="input-air" required placeholder="2.5" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Durasi Tidur (Jam)</label>
+            <input type="number" step="0.5" id="input-tidur" required placeholder="7.5" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Jenis Latihan</label>
+            <select id="input-latihan-type" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+              <option value="Tidak">Tidak Ada</option>
+              <option value="Kardio">Kardio</option>
+              <option value="Strength">Strength</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Durasi (Menit)</label>
+            <input type="number" id="input-durasi" placeholder="30" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">RPE (1-10)</label>
+            <input type="number" min="1" max="10" id="input-rpe" placeholder="6" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Catatan / Sensasi Tubuh / Rasa Lapar</label>
+          <input type="text" id="input-catatan" placeholder="Terasa bertenaga, tidak ada pegal otot" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 flex justify-end space-x-2">
+          <button type="button" onclick="closeAddModal()" class="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition">Batal</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition shadow-md shadow-emerald-600/20">Simpan Log Data</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl flex items-center space-x-3 transition-all transform translate-y-20 opacity-0 z-50 text-xs">
+    <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400"></i>
+    <span id="toast-message">Data log berhasil ditambahkan!</span>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // --- GLOBAL DATA STATE (INITIALIZED FROM BU LIA'S EXCEL FILE) ---
+    const clientTargets = {
+      bmr: 1117.75,
+      tdee: 1732.51,
+      targetCal: 1472.64,
+      targetProtein: 92.8,
+      waterMin: 2.5,
+      sleepTarget: 7.5
+    };
+
+    let logData = [
+      { tanggal: '2026-10-25', bb: 58.0, kalori: 970, protein: 62, air: 2.5, tidur: 5.0, latihanType: 'Tidak', durasi: 0, rpe: 0, catatan: 'Masih terasa DOMS' },
+      { tanggal: '2026-10-26', bb: null, kalori: 1100, protein: 70, air: 2.5, tidur: 5.0, latihanType: 'Kardio', durasi: 30, rpe: 7, catatan: 'Senam Aerobik 30 menit' },
+      { tanggal: '2026-10-27', bb: null, kalori: 985, protein: 46, air: 2.6, tidur: 7.5, latihanType: 'Kardio', durasi: 60, rpe: 7, catatan: 'Renang' },
+      { tanggal: '2026-10-28', bb: null, kalori: 990, protein: 60, air: 2.8, tidur: 8.0, latihanType: 'Kardio', durasi: 30, rpe: 4, catatan: 'Jalan Kaki 2.267 langkah' }
+    ];
+
+    // CHART INSTANCES
+    let caloriesChartInstance = null;
+    let proteinGaugeChartInstance = null;
+    let activityChartInstance = null;
+    let recoveryChartInstance = null;
+
+    // INITIALIZATION ON WINDOW LOAD
+    window.onload = function() {
+      lucide.createIcons();
+      updateDashboardData();
+      renderCharts();
+      renderMonitoringTable();
+      
+      // Set default input date in form to today
+      document.getElementById('input-tanggal').value = new Date().toISOString().split('T')[0];
+    };
+
+    // TAB SWITCHING LOGIC
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-button').forEach(el => {
+        el.classList.remove('tab-active');
+        el.classList.add('text-slate-300');
+      });
+
+      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+      const activeNav = document.getElementById(`nav-${tabId}`);
+      if(activeNav) {
+        activeNav.classList.add('tab-active');
+        activeNav.classList.remove('text-slate-300');
+      }
+
+      // Update Page Header Title
+      const titles = {
+        overview: 'Dashboard Utama',
+        monitoring: 'Monitoring Harian',
+        antropometri: 'Profil & Antropometri',
+        program: 'Program Latihan Mingguan',
+        rekomendasi: 'Rekomendasi Diet & Nutrisi'
+      };
+      document.getElementById('page-title').innerText = titles[tabId] || 'Dashboard';
+    }
+
+    // CALCULATE AVERAGES AND UPDATE KPIS
+    function updateDashboardData() {
+      const avgCal = Math.round(logData.reduce((acc, d) => acc + d.kalori, 0) / logData.length);
+      const avgProtein = (logData.reduce((acc, d) => acc + d.protein, 0) / logData.length).toFixed(1);
+      const avgWater = (logData.reduce((acc, d) => acc + d.air, 0) / logData.length).toFixed(1);
+      const avgSleep = (logData.reduce((acc, d) => acc + d.tidur, 0) / logData.length).toFixed(1);
+
+      // Calorie KPI
+      document.getElementById('kpi-avg-cal').innerHTML = `${avgCal.toLocaleString()} <span class="text-xs text-slate-500 font-normal">kkal</span>`;
+      const calPct = Math.min(100, ((avgCal / clientTargets.targetCal) * 100)).toFixed(1);
+      document.getElementById('kpi-cal-pct').innerText = `${calPct}%`;
+      document.getElementById('bar-cal-pct').style.width = `${calPct}%`;
+      document.getElementById('banner-avg-cal').innerText = `${avgCal.toLocaleString()} kkal`;
+
+      // Protein KPI
+      document.getElementById('kpi-avg-protein').innerHTML = `${avgProtein} <span class="text-xs text-slate-500 font-normal">gram</span>`;
+      const proteinPct = Math.min(100, ((avgProtein / clientTargets.targetProtein) * 100)).toFixed(1);
+      document.getElementById('kpi-protein-pct').innerText = `${proteinPct}%`;
+      document.getElementById('bar-protein-pct').style.width = `${proteinPct}%`;
+      document.getElementById('gauge-current-text').innerText = `${avgProtein} g / hari`;
+
+      // Water KPI
+      document.getElementById('kpi-avg-water').innerHTML = `${avgWater} <span class="text-xs text-slate-500 font-normal">Liter</span>`;
+
+      // Sleep KPI
+      document.getElementById('kpi-avg-sleep').innerHTML = `${avgSleep} <span class="text-xs text-slate-500 font-normal">Jam</span>`;
+    }
+
+    // RENDER TABLE ROWS DYNAMICALLY
+    function renderMonitoringTable() {
+      const tbody = document.getElementById('monitoring-table-body');
+      tbody.innerHTML = '';
+
+      logData.forEach((row) => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 transition border-b border-slate-100';
+
+        const calWarningClass = row.kalori < clientTargets.bmr ? 'bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded' : 'font-medium text-slate-800';
+        const proteinClass = row.protein < 81.2 ? 'text-amber-600 font-semibold' : 'text-emerald-600 font-semibold';
+        
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-medium text-slate-800">${row.tanggal}</td>
+          <td class="py-3 px-4">${row.bb ? row.bb + ' kg' : '-'}</td>
+          <td class="py-3 px-4"><span class="${calWarningClass}">${row.kalori} kkal</span></td>
+          <td class="py-3 px-4"><span class="${proteinClass}">${row.protein} g</span></td>
+          <td class="py-3 px-4">${row.air} L</td>
+          <td class="py-3 px-4">${row.tidur} jam</td>
+          <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[11px] font-medium ${row.latihanType === 'Kardio' ? 'bg-blue-100 text-blue-800' : row.latihanType === 'Strength' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'}">${row.latihanType}</span></td>
+          <td class="py-3 px-4">${row.durasi > 0 ? row.durasi + ' mnt' : '-'}</td>
+          <td class="py-3 px-4">${row.rpe > 0 ? 'RPE ' + row.rpe : '-'}</td>
+          <td class="py-3 px-4 text-xs text-slate-500">${row.catatan || '-'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('table-row-count').innerText = `Menampilkan ${logData.length} entri catatan`;
+    }
+
+    // CHART RENDERING (CHART.JS)
+    function renderCharts() {
+      const labels = logData.map(d => d.tanggal.substring(5)); // Extract MM-DD
+      const calories = logData.map(d => d.kalori);
+      const proteins = logData.map(d => d.protein);
+      const durations = logData.map(d => d.durasi);
+      const rpes = logData.map(d => d.rpe);
+      const waters = logData.map(d => d.air);
+      const sleeps = logData.map(d => d.tidur);
+
+      // 1. Calories vs BMR vs Target Chart
+      const ctxCal = document.getElementById('caloriesChart').getContext('2d');
+      if (caloriesChartInstance) caloriesChartInstance.destroy();
+
+      caloriesChartInstance = new Chart(ctxCal, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Asupan Kalori (kkal)',
+              data: calories,
+              backgroundColor: 'rgba(245, 158, 11, 0.75)',
+              borderColor: '#f59e0b',
+              borderWidth: 1.5,
+              borderRadius: 6
+            },
+            {
+              label: 'Ambang BMR (1,118 kkal)',
+              data: Array(logData.length).fill(clientTargets.bmr),
+              type: 'line',
+              borderColor: '#ef4444',
+              borderWidth: 2,
+              borderDash: [4, 4],
+              pointRadius: 0,
+              fill: false
+            },
+            {
+              label: 'Target Defisit (1,473 kkal)',
+              data: Array(logData.length).fill(clientTargets.targetCal),
+              type: 'line',
+              borderColor: '#16a34a',
+              borderWidth: 2,
+              borderDash: [2, 2],
+              pointRadius: 0,
+              fill: false
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } }
+          },
+          scales: {
+            y: { beginAtZero: false, min: 600, max: 1800 }
+          }
+        }
+      });
+
+      // 2. Protein Doughnut Gauge Chart
+      const ctxProtein = document.getElementById('proteinGaugeChart').getContext('2d');
+      if (proteinGaugeChartInstance) proteinGaugeChartInstance.destroy();
+
+      const avgProteinVal = parseFloat((logData.reduce((acc, d) => acc + d.protein, 0) / logData.length).toFixed(1));
+      const remainingProtein = Math.max(0, clientTargets.targetProtein - avgProteinVal);
+
+      proteinGaugeChartInstance = new Chart(ctxProtein, {
+        type: 'doughnut',
+        data: {
+          labels: ['Rata-rata Tercapai (g)', 'Kekurangan (g)'],
+          datasets: [{
+            data: [avgProteinVal, remainingProtein],
+            backgroundColor: ['#16a34a', '#e2e8f0'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '75%',
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+
+      // 3. Activity Chart
+      const ctxAct = document.getElementById('activityChart').getContext('2d');
+      if (activityChartInstance) activityChartInstance.destroy();
+
+      activityChartInstance = new Chart(ctxAct, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Durasi Latihan (menit)',
+              data: durations,
+              backgroundColor: 'rgba(59, 130, 246, 0.7)',
+              borderRadius: 6,
+              yAxisID: 'y'
+            },
+            {
+              label: 'Skala RPE (1-10)',
+              data: rpes,
+              type: 'line',
+              borderColor: '#8b5cf6',
+              backgroundColor: '#8b5cf6',
+              borderWidth: 2,
+              pointRadius: 4,
+              yAxisID: 'y1'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { type: 'linear', position: 'left', min: 0, max: 90 },
+            y1: { type: 'linear', position: 'right', min: 0, max: 10, grid: { drawOnChartArea: false } }
+          }
+        }
+      });
+
+      // 4. Recovery & Hydration Chart
+      const ctxRec = document.getElementById('recoveryChart').getContext('2d');
+      if (recoveryChartInstance) recoveryChartInstance.destroy();
+
+      recoveryChartInstance = new Chart(ctxRec, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Air Putih (L)',
+              data: waters,
+              borderColor: '#0284c7',
+              backgroundColor: 'rgba(2, 132, 199, 0.1)',
+              fill: true,
+              tension: 0.3
+            },
+            {
+              label: 'Durasi Tidur (Jam)',
+              data: sleeps,
+              borderColor: '#6366f1',
+              backgroundColor: 'rgba(99, 102, 241, 0.1)',
+              fill: true,
+              tension: 0.3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { beginAtZero: true, max: 10 }
+          }
+        }
+      });
+    }
+
+    // MODAL CONTROL
+    function openAddModal() {
+      document.getElementById('addModal').classList.remove('hidden');
+      document.getElementById('addModal').classList.add('flex');
+    }
+
+    function closeAddModal() {
+      document.getElementById('addModal').classList.add('hidden');
+      document.getElementById('addModal').classList.remove('flex');
+    }
+
+    // HANDLE FORM SUBMISSION
+    function handleFormSubmit(e) {
+      e.preventDefault();
+
+      const newEntry = {
+        tanggal: document.getElementById('input-tanggal').value,
+        bb: document.getElementById('input-bb').value ? parseFloat(document.getElementById('input-bb').value) : null,
+        kalori: parseInt(document.getElementById('input-kalori').value),
+        protein: parseInt(document.getElementById('input-protein').value),
+        air: parseFloat(document.getElementById('input-air').value),
+        tidur: parseFloat(document.getElementById('input-tidur').value),
+        latihanType: document.getElementById('input-latihan-type').value,
+        durasi: document.getElementById('input-durasi').value ? parseInt(document.getElementById('input-durasi').value) : 0,
+        rpe: document.getElementById('input-rpe').value ? parseInt(document.getElementById('input-rpe').value) : 0,
+        catatan: document.getElementById('input-catatan').value
+      };
+
+      logData.push(newEntry);
+
+      updateDashboardData();
+      renderMonitoringTable();
+      renderCharts();
+      closeAddModal();
+      showToast('Data log harian Bu Lia berhasil diperbarui!');
+    }
+
+    // TOAST NOTIFICATION
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-message').innerText = message;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3500);
+    }
+  </script>
+</body>
+</html>
